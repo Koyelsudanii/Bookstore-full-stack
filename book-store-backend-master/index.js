@@ -1,38 +1,35 @@
+const dotenv = require("dotenv");
+require("dotenv").config();
 const express = require("express");
-const app = express();
 const cors = require("cors");
-
 const mongoose = require("mongoose");
-const port = process.env.PORT || 5000;
-require('dotenv').config()
 
-// middleware
+const app = express();
+const port = process.env.PORT || 5000;
+
 app.use(express.json());
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://book-store-frontend-a58v.vercel.app/'],
+    origin: [
+        "http://localhost:5173",
+        "https://book-store-frontend-a58v.vercel.app/"
+    ],
     credentials: true
-}))
+}));
 
-// routes
-const bookRoutes = require('./src/books/book.route');
-// const orderRoutes = require("./src/orders/order.route")
-// const userRoutes =  require("./src/users/user.route")
-// const adminRoutes = require("./src/stats/admin.stats")
-
-app.use("/api/books", bookRoutes)
-// app.use("/api/orders", orderRoutes)
-// app.use("/api/auth", userRoutes)
-// app.use("/api/admin", adminRoutes)
+const bookRoutes = require("./src/books/book.route");
+app.use("/api/books", bookRoutes);
 
 async function main() {
-  await mongoose.connect(process.env.MONGODB_URI);
-  app.use("/", (req, res) => {
-    res.send("Book Store Server is running!");
-  });
+    await mongoose.connect(process.env.MONGODB_URI);
+    app.use("/", (req, res) => {
+        res.send("Book Store Server is running!");
+    });
 }
 
-main().then(() => console.log("Mongodb connect successfully!")).catch(err => console.log(err));
+main()
+    .then(() => console.log("Mongodb connected successfully!"))
+    .catch(err => console.log(err));
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Example app listening on port ${port}`);
 });
